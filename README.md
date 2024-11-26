@@ -33,7 +33,7 @@ For any issues or enhancement requests with this plugin, please contact the Simp
 
 ## 1. Download Plugin from GitHub
 
-- Visit the GitHub repository for the SimpleSo Payment Gateway plugin at [GitHub Repository URL](https://github.com/dfin-ai/simpleso-payment-gateway).
+- Visit the GitHub repository for the SimpleSo Payment Gateway plugin at [GitHub Repository URL](https://github.com/simpleso-io/simpleso-payment-gateway).
 - Download the plugin ZIP file to your local machine.
 
 ## 2. Install the Plugin in WordPress
