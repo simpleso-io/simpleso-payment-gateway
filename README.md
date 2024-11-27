@@ -8,7 +8,7 @@ The SimpleSo Payment Gateway plugin for WooCommerce 8.9+ allows you to accept fi
 **Tags:** woocommerce, payment gateway, fiat, SimpleSo  
 **Requires at least:** 6.2  
 **Tested up to:** 6.7  
-**Stable tag:** 1.0.8  
+**Stable tag:** 1.0.1  
 **License:** GPLv3 or later  
 **License URI:** [GPLv3 License](https://www.gnu.org/licenses/gpl-3.0.html)
 
@@ -128,45 +128,9 @@ For any issues or enhancement requests with this plugin, please contact the Simp
 
 ## Documentation
 
-The official documentation for this plugin is available at: [https://www.simpleso.io/api/docs/wordpress-plugin](https://www.simpleso.io/api/docs/wordpress-plugin)
+The official documentation for this plugin is available at: [https://www.simpleso.io/docs/wordpress-plugin](https://www.simpleso.io/docs/wordpress-plugin)
 
 ## Changelog
-
-### Version 1.0.8
-
-- **Added Mode Button:** Introduced a mode selection button, allowing users to switch between "Live" and "Test" modes directly in the plugin settings. This feature enables users to toggle seamlessly between environments for testing or production use.
-
-### Version 1.0.7
-
-- **Fixed Duplicate Order Issue:** Resolved an issue where multiple clicks on the "Place Order" button could result in duplicate orders. Now, the plugin properly handles repeated clicks, preventing duplicate transactions.
-
-### Version 1.0.6
-
-- **Sanitized, Escaped, and Validated Data:** To prevent a user from accidentally sending trash data through the system, as well as protecting them from potential security issues.
-- **Generic function/class/define/namespace/option names:** Improved the uniqueness of the plugin on wordpress.
-
-### Version 1.0.5
-
-- **Fixed Nonce Verification Issue:** Resolved an issue with nonce verification that caused errors during the payment process. The nonce validation mechanism has been updated to ensure proper verification and smoother user experience.
-
-### Version 1.0.4
-
-- **Updated REST API Consent Handling:** Improved the consent handling mechanism in the REST API, ensuring better compliance with data privacy regulations.
-- **Enhanced Security:** Implemented additional security measures for API requests, including improved API key verification and authorization checks.
-- **Updated CORS Handling:** Refined CORS (Cross-Origin Resource Sharing) handling to ensure proper support for preflight requests and enhance security for API endpoints.
-- **Added consent enable/disable option in settings:** Clients can now toggle the consent checkbox on or off.
-
-### Version 1.0.3
-
-- **Updated Consent Text:** Revised the consent text displayed on the payment page to: "I consent to the collection of my data to process this payment."
-
-### Version 1.0.2
-
-- **New Features and Enhancements:**
-
-  - **Order Status Options:** You can now choose between "Processing" or "Completed" as the order status in payment settings, providing more flexibility in managing your orders.
-  - **Improved Billing Address Handling:** Enhancements to how billing addresses are captured and processed, ensuring accuracy and compliance during the payment process.
-  - **User Consent Compliance:** Added features to capture and handle user consent, aligning with data privacy regulations and enhancing trust with your customers.
 
 ### Version 1.0.1 (Initial Release)
 

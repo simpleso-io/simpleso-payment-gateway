@@ -7,7 +7,7 @@
  * Author URI: https://www.simpleso.io
  * Text Domain: simpleso-payment-gateway
  * Plugin URI: https://github.com/simpleso-io/simpleso-payment-gateway
- * Version: 1.0.8
+ * Version: 1.0.1
  * License: GPLv3 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *

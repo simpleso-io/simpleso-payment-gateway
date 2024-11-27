@@ -11,7 +11,7 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 	const ID = 'simpleso';
 
 	// Define constants for SIP URLs
-	const SIP_HOST = 'www.simpleso.io'; // Live SIP host 
+	const SIP_HOST = 'dev.simpleso.io'; // Live SIP host 
 
 	private $sip_protocol; // Protocol (http:// or https://)
 
@@ -77,6 +77,13 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		// Add filter to disable the gateway if needed
 		add_filter('woocommerce_available_payment_gateways', array($this, 'maybe_disable_gateway'));
 	}
+
+	private function get_api_url($endpoint)
+	{
+		$base_url = self::SIP_HOST;
+		return $this->sip_protocol . $base_url . $endpoint;
+	}
+
 
 	public function simpleso_process_admin_options()
 	{
@@ -218,7 +225,6 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 				'desc_tip' => true,
 				'id' => 'order_status_select', // Add an ID for targeting
 				'options' => array(
-					// '' => __('Select order status', 'simpleso-payment-gateway'), // Placeholder option
 					'processing' => __('Processing', 'simpleso-payment-gateway'),
 					'completed' => __('Completed', 'simpleso-payment-gateway'),
 				),
@@ -261,11 +267,7 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 		//amount, usermode, user
 		// Prepare data for the API request
 		$data = $this->simpleso_prepare_payment_data($order);
-
-		$transaction_dailylimit = '/api/dailylimit';
-
-		// Concatenate the base URL and path
-		$transactionLimitApiUrl = $this->sip_protocol . self::SIP_HOST . $transaction_dailylimit;
+		$transactionLimitApiUrl = $this->get_api_url('/api/dailylimit');
 
 		// Send the data to the API
 		$transaction_limit_response = wp_remote_post($transactionLimitApiUrl, array(
@@ -296,13 +298,9 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			return array('result' => 'fail');
 		}
 
-		$apiPath = '/api/request-payment';
-
-		// Concatenate the base URL and path
-		$url = $this->sip_protocol . self::SIP_HOST . $apiPath;
-
+		$requestPaymentUrl = $this->get_api_url('/api/request-payment');
 		// Remove any double slashes in the URL except for the 'http://' or 'https://'
-		$cleanUrl = esc_url(preg_replace('#(?<!:)//+#', '/', $url));
+		$cleanUrl = esc_url(preg_replace('#(?<!:)//+#', '/', $requestPaymentUrl));
 
 		$order->update_meta_data('_order_origin', 'simpleso_payment_gateway');
 		$order->save();
@@ -360,10 +358,7 @@ class SIMPLESO_PAYMENT_GATEWAY extends WC_Payment_Gateway_CC
 			// Add the note if it doesn't exist
 			if (!$note_exists) {
 				$order->add_order_note(
-					__('Payment initiated via SimpleSo Payment Gateway. Awaiting customer action.', 'simpleso-payment-gateway'),
-					__('Payment initiated via SimpleSo Payment Gateway. Awaiting customer action.', 'simpleso-payment-gateway'),
-					__('Payment initiated via SimpleSo Payment Gateway. Awaiting customer action.', 'simpleso-payment-gateway'),
-					false // The second parameter `false` ensures the note is not visible to the customer.
+					__('Payment initiated via SimpleSo Payment Gateway. Awaiting customer action.', 'simpleso-payment-gateway')
 				);
 			}
 
