@@ -9,8 +9,8 @@ jQuery(function ($) {
   // Sanitize loader URL and append loader image to the body
   var loaderUrl = simpleso_params.simpleso_loader
     ? encodeURI(simpleso_params.simpleso_loader)
-    : ''
-  $('body').append(
+    : ""
+  $("body").append(
     '<div class="simpleso-loader-background"></div>' +
       '<div class="simpleso-loader"><img src="' +
       loaderUrl +
@@ -32,43 +32,39 @@ jQuery(function ($) {
       .find('input[name="payment_method"]:checked')
       .val()
 
-    if (selectedPaymentMethod !== 'simpleso') {
+    if (selectedPaymentMethod !== "simpleso") {
       return true // Allow WooCommerce to handle the form submission if not using the custom payment method
     }
 
-    $('.simpleso-loader-background, .simpleso-loader').show()
+    $(".simpleso-loader-background, .simpleso-loader").show()
 
     $button = $form.find('button[type="submit"]')
     originalButtonText = $button.text()
-    $button.text('Processing...').prop('disabled', true)
+    $button.text("Processing...").prop("disabled", true)
 
     var data = $form.serialize()
 
-    setTimeout(function () {
-      $.ajax({
-        type: 'POST',
-        url: wc_checkout_params.checkout_url,
-        data: data,
-        dataType: 'json',
-        success: function (response) {
-          handleResponse(response, $form)
-        },
-        error: function () {
-          handleError($form)
-        },
-        complete: function () {
-          // Always reset isSubmitting to false in case of success or error
-          isSubmitting = false
-        },
-      })
-    }, 2000)
+    $.ajax({
+      type: "POST",
+      url: wc_checkout_params.checkout_url,
+      data: data,
+      dataType: "json",
+      success: function (response) {
+        handleResponse(response, $form)
+      },
+      error: function () {
+        handleError($form)
+      },
+      complete: function () {
+        isSubmitting = false
+      },
+    })
 
     e.preventDefault() // Prevent default form submission
     return false
   }
 
   function openPaymentLink(paymentLink) {
-    // Sanitize the payment link
     var sanitizedPaymentLink = encodeURI(paymentLink)
 
     var width = 700
@@ -77,23 +73,22 @@ jQuery(function ($) {
     var top = window.innerHeight / 2 - height / 2
     var popupWindow = window.open(
       sanitizedPaymentLink,
-      'paymentPopup',
-      'width=' +
+      "paymentPopup",
+      "width=" +
         width +
-        ',height=' +
+        ",height=" +
         height +
-        ',scrollbars=yes,top=' +
+        ",scrollbars=yes,top=" +
         top +
-        ',left=' +
+        ",left=" +
         left
     )
 
     if (
       !popupWindow ||
       popupWindow.closed ||
-      typeof popupWindow.closed === 'undefined'
+      typeof popupWindow.closed === "undefined"
     ) {
-      // Redirect to the payment link if popup was blocked
       window.location.href = sanitizedPaymentLink
       resetButton()
     } else {
@@ -106,23 +101,20 @@ jQuery(function ($) {
 
       paymentStatusInterval = setInterval(function () {
         $.ajax({
-          type: 'POST',
+          type: "POST",
           url: simpleso_params.ajax_url,
           data: {
-            action: 'check_payment_status',
+            action: "check_payment_status",
             order_id: orderId,
             security: simpleso_params.simpleso_nonce,
           },
-          dataType: 'json',
-          cache: false,
-          processData: true,
-          async: false,
+          dataType: "json",
           success: function (statusResponse) {
-            if (statusResponse.data.status === 'success') {
+            if (statusResponse.data.status === "success") {
               clearInterval(paymentStatusInterval)
               clearInterval(popupInterval)
               window.location.href = statusResponse.data.redirect_url
-            } else if (statusResponse.data.status === 'failed') {
+            } else if (statusResponse.data.status === "failed") {
               clearInterval(paymentStatusInterval)
               clearInterval(popupInterval)
               window.location.href = statusResponse.data.redirect_url
@@ -134,20 +126,20 @@ jQuery(function ($) {
   }
 
   function handleResponse(response, $form) {
-    $('.simpleso-loader-background, .simpleso-loader').hide()
-    $('.wc_er').remove()
+    $(".simpleso-loader-background, .simpleso-loader").hide()
+    $(".wc_er").remove()
 
     try {
-      if (response.result === 'success') {
+      if (response.result === "success") {
         orderId = response.order_id
         var paymentLink = response.payment_link
         openPaymentLink(paymentLink)
 
-        $form.removeAttr('data-result')
-        $form.removeAttr('data-redirect-url')
+        $form.removeAttr("data-result")
+        $form.removeAttr("data-redirect-url")
         isSubmitting = false
       } else {
-        throw response.messages || 'An error occurred during checkout.'
+        throw response.messages || "An error occurred during checkout."
       }
     } catch (err) {
       displayError(err, $form)
@@ -155,13 +147,13 @@ jQuery(function ($) {
   }
 
   function handleError($form) {
-    $('.wc_er').remove()
+    $(".wc_er").remove()
     $form.prepend(
       '<div class="wc_er">An error occurred during checkout. Please try again.</div>'
     )
-    $('html, body').animate(
+    $("html, body").animate(
       {
-        scrollTop: $('.wc_er').offset().top - 300,
+        scrollTop: $(".wc_er").offset().top - 300,
       },
       500
     )
@@ -169,11 +161,11 @@ jQuery(function ($) {
   }
 
   function displayError(err, $form) {
-    $('.wc_er').remove()
-    $form.prepend('<div class="wc_er">' + err + '</div>')
-    $('html, body').animate(
+    $(".wc_er").remove()
+    $form.prepend('<div class="wc_er">' + err + "</div>")
+    $("html, body").animate(
       {
-        scrollTop: $('.wc_er').offset().top - 300,
+        scrollTop: $(".wc_er").offset().top - 300,
       },
       500
     )
@@ -183,14 +175,31 @@ jQuery(function ($) {
   function resetButton() {
     isSubmitting = false
     if ($button) {
-      $button.prop('disabled', false).text(originalButtonText)
+      $button.prop("disabled", false).text(originalButtonText)
     }
-    $('.simpleso-loader-background, .simpleso-loader').hide()
+    $(".simpleso-loader-background, .simpleso-loader").hide()
   }
 
-  $('form.checkout').off('submit').on('submit', handleFormSubmit)
+  // Bind the form submit handler only for the Simpleso payment method
+  $("form.checkout").on("submit.simpleso", function (e) {
+    if (
+      $(this).find('input[name="payment_method"]:checked').val() === "simpleso"
+    ) {
+      handleFormSubmit.call(this, e)
+    }
+  })
 
-  $(document.body).on('updated_checkout', function () {
-    $('form.checkout').off('submit').on('submit', handleFormSubmit)
+  // Rebind after checkout updates
+  $(document.body).on("updated_checkout", function () {
+    $("form.checkout")
+      .off("submit.simpleso")
+      .on("submit.simpleso", function (e) {
+        if (
+          $(this).find('input[name="payment_method"]:checked').val() ===
+          "simpleso"
+        ) {
+          handleFormSubmit.call(this, e)
+        }
+      })
   })
 })
